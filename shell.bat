@@ -1,1 +1,1 @@
-python ./shell.py 1
+python ./shell.py -v
