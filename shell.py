@@ -1,5 +1,5 @@
 import sys
-
+print(sys.version)
 args = sys.argv
 
 if args[1] == "-v" or args[1] == "-V":
