@@ -1,18 +1,21 @@
 # to execute run
 # python shell.py <arguments>
-import sys
+# import sys
 import os
-import subprocess
 import fileinput
 import argparse
 
 def parseInput():
     parser = argparse.ArgumentParser()
-    # parser.add_argument()
-    parser.parse_args()
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("-v", "--verbose", action="store_true")
+    group.add_argument("-q", "--quiet", action="store_true")
+    parser.add_argument("-?",action="help")
+    parser.add_argument("-f","--file", type=str, help="the file to output")
+    args = parser.parse_args()
 
 def printFile(file):
-    for line in inputfile:
+    for line in file:
             print(line)
 def printStdIn():
     with fileinput.input() as lines:
