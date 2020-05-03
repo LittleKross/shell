@@ -9,8 +9,8 @@ import select
 def parseInput():
     parser = argparse.ArgumentParser(add_help=False)
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-v", "--verbose", action="store_true",help="Display addititonal information")
-    group.add_argument("-q", "--quiet", action="store_true",help="Displaf less information")
+    group.add_argument("-v", "--version", action="store_true",help="Display current version info")
+    group.add_argument("-q", "--quiet", action="store_true",help="Display less information")
     parser.add_argument('-h', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
     #parser.add_argument("-?",action="help")
     parser.add_argument("-f","--file", type=str, help="The file to output")
@@ -21,13 +21,15 @@ def evalInfo(argsData):
     if argsData.file != None:
         datafile = open(argsData.file)
         printFile(datafile)
+    if argsData.version:
+        print("shell.py version --> 1.0.0")
 
 def printFile(file):
     count = 0
     for line in file:
             count += 1
             if count > 1:
-                print(line)#remove 1st two chars later
+                print(line) # remove 1st two chars later
 
 def printStdIn(stdIn):
     with stdIn as lines:
