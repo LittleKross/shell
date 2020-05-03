@@ -18,14 +18,12 @@ def parseInput():
     return args
 
 def evalInfo(argsData):
-    
-    isStdin = True
-    for line in fileinput.input():
-        if not fileinput.isstdin():
-            isStdin = False
-            break
-        print(line)
-    fileinput.close()
+    if not sys.stdin.isatty():
+        test = fileinput.input()
+        if test.__sizeof__() != 0:
+            for line in fileinput.input():
+                print(line)
+        fileinput.close()
 
     if argsData.file != None:
         datafile = open(argsData.file)
