@@ -11,7 +11,7 @@ version = "1.0.0"
 def parseInput():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument("-v", "--version", action="store_true",help="Display current version info")
-    parser.add_argument('-h', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
+    parser.add_argument('-h','-H', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
     parser.add_argument("-f","--file", type=str, help="The file to output")
     args = parser.parse_args()
     return args
