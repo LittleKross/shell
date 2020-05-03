@@ -1,7 +1,7 @@
 # to execute run
 # python shell.py <arguments>
 import sys
-import os
+#import os
 import fileinput
 import argparse
 import select
@@ -23,11 +23,14 @@ def evalInfo(argsData):
         printFile(datafile)
 
 def printFile(file):
+    count = 0
     for line in file:
-            print(line)
+            count += 1
+            if count > 1:
+                print(line)#remove 1st two chars later
 
-def printStdIn():
-    with fileinput.input() as lines:
+def printStdIn(stdIn):
+    with stdIn as lines:
         for line in lines:
             if lines.lineno() != 1:
                 print(lines.lineno(),line)
@@ -55,9 +58,9 @@ def test():
             else:
                 inputfile = open(args[i])
     
-    
-if select.select([sys.stdin],[],[],0.0)[0]:
-    printStdIn()
+data = fileinput.input() 
+if data.isstdin():
+    printStdIn(data)
 else:
     parsed = parseInput()
     evalInfo(parsed)
