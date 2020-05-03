@@ -1,27 +1,37 @@
 # to execute run
 # python shell.py <arguments>
-# import sys
+import sys
 import os
 import fileinput
 import argparse
+import select
 
 def parseInput():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(add_help=False)
     group = parser.add_mutually_exclusive_group()
-    group.add_argument("-v", "--verbose", action="store_true")
-    group.add_argument("-q", "--quiet", action="store_true")
-    parser.add_argument("-?",action="help")
-    parser.add_argument("-f","--file", type=str, help="the file to output")
+    group.add_argument("-v", "--verbose", action="store_true",help="Display addititonal information")
+    group.add_argument("-q", "--quiet", action="store_true",help="Displaf less information")
+    parser.add_argument('-h', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
+    #parser.add_argument("-?",action="help")
+    parser.add_argument("-f","--file", type=str, help="The file to output")
     args = parser.parse_args()
+    return args
+
+def evalInfo(argsData):
+    if argsData.file != None:
+        datafile = open(argsData.file)
+        printFile(datafile)
 
 def printFile(file):
     for line in file:
             print(line)
+
 def printStdIn():
     with fileinput.input() as lines:
         for line in lines:
             if lines.lineno() != 1:
                 print(lines.lineno(),line)
+
 def test():
     args = sys.argv
 
@@ -46,4 +56,9 @@ def test():
                 inputfile = open(args[i])
     
     
-parseInput()
+if select.select([sys.stdin],[],[],0.0)[0]:
+    printStdIn()
+else:
+    parsed = parseInput()
+    evalInfo(parsed)
+    
