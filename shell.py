@@ -1,10 +1,11 @@
-# to execute run
-# python shell.py <arguments>
+# Imports
 import sys
-#import os
 import fileinput
 import argparse
-import select
+import fileinput
+
+# Global variables
+version = "1.0.0"
 
 def parseInput():
     parser = argparse.ArgumentParser(add_help=False)
@@ -12,17 +13,25 @@ def parseInput():
     group.add_argument("-v", "--version", action="store_true",help="Display current version info")
     group.add_argument("-q", "--quiet", action="store_true",help="Display less information")
     parser.add_argument('-h', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
-    #parser.add_argument("-?",action="help")
     parser.add_argument("-f","--file", type=str, help="The file to output")
     args = parser.parse_args()
     return args
 
 def evalInfo(argsData):
+    
+    isStdin = True
+    for line in fileinput.input():
+        if not fileinput.isstdin():
+            isStdin = False
+            break
+        print(line)
+    fileinput.close()
+
     if argsData.file != None:
         datafile = open(argsData.file)
         printFile(datafile)
     if argsData.version:
-        print("shell.py version --> 1.0.0")
+        print("shell.py version --> " + version)
 
 def printFile(file):
     count = 0
@@ -37,33 +46,29 @@ def printStdIn(stdIn):
             if lines.lineno() != 1:
                 print(lines.lineno(),line)
 
-def test():
-    args = sys.argv
+# def test():
+    # args = sys.argv
 
     # Input processing
-    test = fileinput.input()
+    # test = fileinput.input()
     # Flags
-    if args.__len__() == 1 and test:
-        sys.stdout.write("Help documentation...\n")
-    else:
+    # if args.__len__() == 1 and test:
+        # sys.stdout.write("Help documentation...\n")
+    # else:
         # Each case represents a flag at any specific element in the args array
-        for i in range(1,args.__len__()):
-            if args.__len__() == 1:
-                printStdIn()
-            if args[i] == "-v" or args[i] == "-V" or args[i] == "--get-version":
-                sys.stdout.write("Version 1.0.0\n")
+        # for i in range(1,args.__len__()):
+            # if args.__len__() == 1:
+                # printStdIn()
+            # if args[i] == "-v" or args[i] == "-V" or args[i] == "--get-version":
+                # sys.stdout.write("Version 1.0.0\n")
             #if args[i] == "-h" or args[i] == "-H" or args[i] == "-?" or args[i] == "--Help" or args[i] == "--get-help":
             #    sys.stdout.write("Help documentation...")
-            if args[i] == "-f" or args[i] == "-F" or args[i] == "--input-file" or args[i] == "--Input-File":
-                inputfile = open(args[i + 1])
-                break
-            else:
-                inputfile = open(args[i])
-    
-data = fileinput.input() 
-if data.isstdin():
-    printStdIn(data)
-else:
-    parsed = parseInput()
-    evalInfo(parsed)
+            # if args[i] == "-f" or args[i] == "-F" or args[i] == "--input-file" or args[i] == "--Input-File":
+                # inputfile = open(args[i + 1])
+                # break
+            # else:
+                # inputfile = open(args[i])
+
+parsed = parseInput()
+evalInfo(parsed)
     
