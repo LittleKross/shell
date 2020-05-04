@@ -55,3 +55,8 @@ parser.parse_args()
 #             else:
 #                 inputfile = open(args[i])
 ```
+
+### P_05 Notes
+
+[How to print help when no params are passed](https://stackoverflow.com/questions/4042452/display-help-message-with-python-argparse-when-script-is-called-without-any-argu)  
+[How to detect if a file exists](https://stackoverflow.com/questions/82831/how-do-i-check-whether-a-file-exists-without-exceptions)
