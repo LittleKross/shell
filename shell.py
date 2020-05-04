@@ -5,46 +5,55 @@ import argparse
 import fileinput
 
 # Global variables
-version = "1.1.0"
+version = "1.1.1"
 
 # Methods
 def parseInput():
-    parser = argparse.ArgumentParser(add_help=False)
-    parser.add_mutually_exclusive_group()
-    parser.add_argument('-v', '--version', action="version",version="shell.py version --> " + version,help="Display current version info")
+    parser = argparse.ArgumentParser(add_help=False,description='Takes a disk and prints its contents.')
+    parser.add_argument('-v', '--version', action="version",version="shell.py version --> " + version,help="Display current program version")
     parser.add_argument('-d','-dir','--directory',action="store_true",help="List file contents of the input drive")
     parser.add_argument('-h','-H', '--help','-?', action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
     parser.add_argument('-f','--file', type=str, help="Specify a formatted drive file")
+    if len(sys.argv)==1 and sys.stdin.isatty():
+        parser.print_help(sys.stderr)
+        sys.exit(1)
     args = parser.parse_args()
     return args
 
 def evalInfo(argsData):
-    if not sys.stdin.isatty():
-        data = fileinput.input()
-        printStdIn(data)
-        data.close()
-        
+    try:
+        data = []
+        if not sys.stdin.isatty():
+            file = fileinput.input()
+        if argsData.file != None:
+            file = open(argsData.file)
+        if argsData.directory:
+            print('')
+        if file != None:
+            collectRawDisk(data,file)
+            file.close()
+            printRawDisk(data)
+    except:
+        print("Error: your disk is broken, please ensure that that file exists or use another disk file.")
 
-    if argsData.file != None:
-        datafile = open(argsData.file)
-        printFile(datafile)
-    #if argsData.version:
-    #    print("shell.py version --> " + version)
-    #    sys.exit(1)
-    if argsData.directory:
-        print("dir here")
+def printFolders():
+    print("")
 
-def printFile(file):
+def collectRawDisk(data,file):
     count = 0
     for line in file:
             if count > 1:
-                sys.stdout.write(line[3:])
+                #sys.stdout.write(line[3:])
+                data.append(line[3:])
             count += 1
-
-def printStdIn(stdIn):
-    for line in stdIn:
-            if stdIn.lineno() > 2:
-                sys.stdout.write(line[3:])
+    return data
+def printRawDisk(disk):
+    for line in disk:
+        sys.stdout.write(line)
+# def printStdIn(stdIn):
+#     for line in stdIn:
+#             if stdIn.lineno() > 2:
+#                 sys.stdout.write(line[3:])
 
 # Main
 
