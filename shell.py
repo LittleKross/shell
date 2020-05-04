@@ -1,5 +1,6 @@
 # Imports
 import sys
+import os
 import fileinput
 import argparse
 import fileinput
@@ -26,15 +27,16 @@ def evalInfo(argsData):
         if not sys.stdin.isatty():
             file = fileinput.input()
         if argsData.file != None:
-            file = open(argsData.file)
-        if argsData.directory:
-            print('')
+            fileName = argsData.file
+            file = open(fileName)
         if file != None:
             collectRawDisk(data,file)
             file.close()
             printRawDisk(data)
+        if argsData.directory:
+            print('')
     except:
-        print("Error: your disk is broken, please ensure that that file exists or use another disk file.")
+        print("Error: The disk is broken or does not exist, please provide a correct drive file.")
 
 def printFolders():
     print("")
@@ -43,7 +45,6 @@ def collectRawDisk(data,file):
     count = 0
     for line in file:
             if count > 1:
-                #sys.stdout.write(line[3:])
                 data.append(line[3:])
             count += 1
     return data
