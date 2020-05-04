@@ -10,9 +10,10 @@ version = "1.0.0"
 # Methods
 def parseInput():
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument("-v", "--version", action="store_true",help="Display current version info")
-    parser.add_argument('-h','-H', '--help',"-?", action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
-    parser.add_argument("-f","--file", type=str, help="The file to output")
+    parser.add_argument('-v', '--version', action="store_true",help="Display current version info")
+    parser.add_argument('-h','-H', '--help','-?', action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
+    parser.add_argument('-f','--file', type=str, help="Specify a formatted drive file")
+    parser.add_argument('-dir','--show-directory',action="store_true",help="List file contents of the input drive")
     args = parser.parse_args()
     return args
 
@@ -28,6 +29,9 @@ def evalInfo(argsData):
         printFile(datafile)
     if argsData.version:
         print("shell.py version --> " + version)
+        #exit
+    if argsData.dir:
+        print("dir here")
 
 def printFile(file):
     count = 0
