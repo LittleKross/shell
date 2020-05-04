@@ -5,15 +5,16 @@ import argparse
 import fileinput
 
 # Global variables
-version = "1.0.0"
+version = "1.1.0"
 
 # Methods
 def parseInput():
     parser = argparse.ArgumentParser(add_help=False)
-    parser.add_argument('-v', '--version', action="store_true",help="Display current version info")
+    parser.add_mutually_exclusive_group()
+    parser.add_argument('-v', '--version', action="version",version="shell.py version --> " + version,help="Display current version info")
+    parser.add_argument('-d','-dir','--directory',action="store_true",help="List file contents of the input drive")
     parser.add_argument('-h','-H', '--help','-?', action='help', default=argparse.SUPPRESS,help='Show this help message and exit.')
     parser.add_argument('-f','--file', type=str, help="Specify a formatted drive file")
-    parser.add_argument('-dir','--show-directory',action="store_true",help="List file contents of the input drive")
     args = parser.parse_args()
     return args
 
@@ -27,10 +28,10 @@ def evalInfo(argsData):
     if argsData.file != None:
         datafile = open(argsData.file)
         printFile(datafile)
-    if argsData.version:
-        print("shell.py version --> " + version)
-        #exit
-    if argsData.dir:
+    #if argsData.version:
+    #    print("shell.py version --> " + version)
+    #    sys.exit(1)
+    if argsData.directory:
         print("dir here")
 
 def printFile(file):
