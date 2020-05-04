@@ -32,9 +32,8 @@ def evalInfo(argsData):
         if file != None:
             collectRawDisk(data,file)
             file.close()
-            printRawDisk(data)
         if argsData.directory:
-            print('')
+            printRawDisk(data)
     except:
         print("Error: The disk is broken or does not exist, please provide a correct drive file.")
 
