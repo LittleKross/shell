@@ -6,7 +6,7 @@ import argparse
 import fileinput
 
 # Global variables
-version = "1.1.1"
+version = "1.1.2"
 
 # Methods
 def parseInput():
@@ -21,16 +21,19 @@ def parseInput():
     args = parser.parse_args()
     return args
 
-def fileCheck(file):
+def verifyFile(file):
     results = os.path.exists(os.path.join(os.getcwd(), file))
     return results
 
 def evalArgs(argsData):
     try:
         data = []
+        fileName = None
+        file = None
         if not sys.stdin.isatty():
             file = fileinput.input()
         if argsData.file != None:
+            print(argsData.file)
             fileName = argsData.file
             file = open(fileName)
         if file != None:
@@ -38,10 +41,14 @@ def evalArgs(argsData):
             file.close()
         if argsData.directory:
             printRawDisk(data)
+        if fileName == None and file == None:
+            raise(Exception)
     except:
-        if fileCheck(file):
+        #print(fileName)
+        if (fileName != None) and not(verifyFile(fileName)):
             print("Error: The disk is broken or does not exist, please provide a correct drive file.")
-        print("Error: you broke the thing... good job")
+        else:
+            print("Error: you broke the thing... good job")
 
 def printFolders():
     print("")
@@ -53,16 +60,10 @@ def collectRawDisk(data,file):
                 data.append(line[3:])
             count += 1
     return data
+
 def printRawDisk(disk):
     for line in disk:
         sys.stdout.write(line)
-# def printStdIn(stdIn):
-#     for line in stdIn:
-#             if stdIn.lineno() > 2:
-#                 sys.stdout.write(line[3:])
-
-# Main
 
 parsed = parseInput()
-evalInfo(parsed)
-    
+evalArgs(parsed)
