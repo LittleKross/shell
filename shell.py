@@ -21,7 +21,11 @@ def parseInput():
     args = parser.parse_args()
     return args
 
-def evalInfo(argsData):
+def fileCheck(file):
+    results = os.path.exists(os.path.join(os.getcwd(), file))
+    return results
+
+def evalArgs(argsData):
     try:
         data = []
         if not sys.stdin.isatty():
@@ -35,7 +39,9 @@ def evalInfo(argsData):
         if argsData.directory:
             printRawDisk(data)
     except:
-        print("Error: The disk is broken or does not exist, please provide a correct drive file.")
+        if fileCheck(file):
+            print("Error: The disk is broken or does not exist, please provide a correct drive file.")
+        print("Error: you broke the thing... good job")
 
 def printFolders():
     print("")
