@@ -44,9 +44,10 @@ def evalArgs(argsData):
         if fileName == None and file == None:
             raise(Exception)
     except:
-        #print(fileName)
         if (fileName != None) and not(verifyFile(fileName)):
             print("Error: The disk is broken or does not exist, please provide a correct drive file.")
+        elif argsData.directory:
+            print("Error: -dir is useless without a specified disk file")
         else:
             print("Error: you broke the thing... good job")
 
