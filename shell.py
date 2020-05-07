@@ -10,8 +10,9 @@ version = "1.1.2"
 
 # Class
 class Disk:
-    def __init__(self):
 
+    def __init__(self):
+       folder = 1
 
 # Methods
 
@@ -109,6 +110,10 @@ def crawlRawDisk(*args):
         nextCluster = args[0][args[1]][1:3] # convert nextCluster to int
         print(nextCluster)
         crawlRawDisk(args[0],nextCluster)
+
+## Void method takes in a string and evaluates the sector
+def readCluster(cluster):
+    print()
 
 # Main
 parsed = parseInput()
