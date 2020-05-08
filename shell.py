@@ -4,6 +4,7 @@ import os
 import fileinput
 import argparse
 import fileinput
+import re
 
 # Global variables
 version = "1.1.2"
@@ -41,28 +42,27 @@ def parseInput():
 ## Takes in an argParser with data and executes main program logic
 def evalArgs(argsData):
     try:
+        print(sys.stdin)
+        #print("test")
         # Predefine vars
-        data = []
         fileName = None
-        file = None
-
+        diskFile = None
         # Check for stdin
         if not sys.stdin.isatty():
-            file = fileinput.input()
+            diskFile = sys.stdin#fileinput.input()
 
         # Check for file input flag
         if argsData.file != None:
             fileName = argsData.file
-            file = open(fileName)
+            diskFile = open(fileName)
 
         # Check if either stdin or -f has been passed in
-        if file != None:
-            data = collectRawDisk(data,file)
-            file.close()
+        if diskFile != None:
+            data = collectRawDisk(diskFile)
             printRawDisk(data)
 
         # Checks for directory file
-        if argsData.directory:
+        if argsData.directory or not sys.stdin.isatty():
             crawlRawDisk(data)
 
     except:
@@ -70,7 +70,7 @@ def evalArgs(argsData):
         if (fileName != None) and not(verifyFile(fileName)):
             print("Error: The disk is broken or does not exist, please provide a correct drive file.")
         # Check if dir flag was set and no other args
-        elif argsData.directory and fileName == None and file == None:
+        elif argsData.directory and fileName == None and diskFile == None and data == []:
             print("Error: -dir is useless without a specified disk file")
         else:
             pass
@@ -86,34 +86,46 @@ def verifyFile(fileName):
 ## Void method inputs a list and prints the contents
 def printRawDisk(disk):
     for line in disk:
-        sys.stdout.write(line)
+        print(line)
 
 ## inputs empty list and file, and extracts contents from file to disk
 ## Returns filled list
-def collectRawDisk(data,file):
-    count = 0
-    for line in file:
+def collectRawDisk(file):
+    data = []
+    try:
+        count = 0
+        for line in file:
             if count > 1:
-                data.append(line[3:])
+                data.append(str(line[3:64]))
             count += 1
-    return data
+        return data
+    except:
+        pass
 
 ## Void method takes in a list and recursively iterates through all the clusters in the list
 def crawlRawDisk(*args):
     if len(args) == 1:
-        row = 0
-        crawlRawDisk(args[0],row)
+        currentCluster = args[0][0]
+        startOfVolume = int(currentCluster[5:7],16)
+        volumeName = currentCluster[7:64]
+        data = readClusterData(volumeName)
+        print("Volume: " + data)
+        crawlRawDisk(args[0],startOfVolume)
     if len(args) == 2:
         currentCluster = args[0][args[1]]
-        # read sector
-        print(currentCluster)
-        nextCluster = args[0][args[1]][1:3] # convert nextCluster to int
-        print(nextCluster)
-        crawlRawDisk(args[0],nextCluster)
+        nextCluster = int(currentCluster[1:3],16)
+        filename = readClusterData(currentCluster[5:64])
+        print("\tFile: " + filename)
+        if nextCluster != 00:
+            crawlRawDisk(args[0],nextCluster)
+
+def hexToStr(hex):
+    hex = re.sub("00.*","",hex)
+    return bytearray.fromhex(hex).decode()
 
 ## Void method takes in a string and evaluates the sector
-def readCluster(cluster):
-    print()
+def readClusterData(clusterData):
+    return hexToStr(clusterData)
 
 # Main
 parsed = parseInput()
