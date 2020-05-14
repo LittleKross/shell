@@ -42,7 +42,6 @@ def parseInput():
 ## Takes in an argParser with data and executes main program logic
 def evalArgs(argsData):
     try:
-        print(sys.stdin)
         #print("test")
         # Predefine vars
         fileName = None
