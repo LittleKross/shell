@@ -3,7 +3,6 @@ import sys
 import os
 import fileinput
 import argparse
-import fileinput
 import re
 
 # Global variables
