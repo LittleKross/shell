@@ -1,3 +1,3 @@
 # Shell
 
-A simple disk reader for an operating systems course written in python.
+A simple disk reader written in python.
